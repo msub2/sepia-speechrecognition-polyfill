@@ -1,0 +1,20 @@
+{
+  "name": "sepia-speechrecognition-polyfill",
+  "version": "1.0.0",
+  "description": "A polyfill for SpeechRecognition utilizing a Sepia STT server.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msub2/sepia-speechrecognition-polyfill.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/msub2/sepia-speechrecognition-polyfill/issues"
+  },
+  "homepage": "https://github.com/msub2/sepia-speechrecognition-polyfill#readme"
+}
