@@ -95,7 +95,7 @@ export class Recorder {
       SepiaVoiceRecorder.onSpeechRecognitionStateChange = function(ev) {
         if (ev.state == "onStreamStart") {
           if (!self.asrStreaming) {
-            sepiaSpeechRecognition._dispatchEvent(new Event('soundstart'));
+            // N/A?
           }
           self.asrStreaming = true;
         } else if (ev.state == "onStreamEnd") {
@@ -114,7 +114,6 @@ export class Recorder {
             }
           }
           self.asrStreaming = false;
-          sepiaSpeechRecognition._dispatchEvent(new Event('soundend'));
         }
       }
       SepiaVoiceRecorder.onSpeechRecognitionEvent = function(data) {
@@ -145,6 +144,23 @@ export class Recorder {
       SepiaVoiceRecorder.onWaveEncoderAudioData = function(waveData) {
         // N/A
       }
+      //Voice-Activity-Detection events
+      SepiaVoiceRecorder.onVadStateChange = function(state, code){
+        switch (state) {
+          case 'vaup':
+            sepiaSpeechRecognition._dispatchEvent(new Event('soundstart'));
+            break;
+          case 'vadown':
+            sepiaSpeechRecognition._dispatchEvent(new Event('soundend'));
+            break;
+          case 'speechstart':
+            sepiaSpeechRecognition._dispatchEvent(new Event('speechstart'));
+            break;
+          case 'speechend':
+          sepiaSpeechRecognition._dispatchEvent(new Event('speechend'));
+          break;
+        }
+      }
     }
   }
   
@@ -169,7 +185,7 @@ export class Recorder {
           gain: self.gain,
           //recordingLimitMs: 10000,	//NOTE: will not apply in continous mode
           asr: opt,
-          vad: false 	//check voice recorder demo of SEPIA Web Audio Lib. for info about VAD etc.
+          vad: true 	//check voice recorder demo of SEPIA Web Audio Lib. for info about VAD etc.
         });
       });
       
