@@ -34,8 +34,6 @@ export class SepiaSpeechRecognition {
 
   constructor() {
     getServerInfo();
-    console.log(this.#recorder);
-    console.log(this);
   }
 
   /**
