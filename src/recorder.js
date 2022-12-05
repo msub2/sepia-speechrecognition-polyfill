@@ -22,6 +22,7 @@ export class Recorder {
   constructor(sepiaSpeechRecognition) {
     if (!window.SepiaVoiceRecorder) {
       SepiaVoiceRecorder = {notSupported: true};	//Library not found or not supported (browser <= IE11)
+      console.error("SEPIA Web Audio Library not found or not supported (IE11?)!");
     } else {
       this.sepiaSpeechRecognition = sepiaSpeechRecognition;
       const self = this;
