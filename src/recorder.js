@@ -1,4 +1,8 @@
 import { SepiaSpeechRecognition } from "./api/SpeechRecognition.js";
+import { SpeechRecognitionEvent } from "./api/SpeechRecognitionEvent.js";
+import { SpeechRecognitionAlternative } from "./api/SpeechRecognitionAlternative.js";
+import { SpeechRecognitionResult } from "./api/SpeechRecognitionResult.js";
+import { SpeechRecognitionResultList } from "./api/SpeechRecognitionResultList.js";
 import { serverSettings, asrOptions, phrases } from "./server.js";
 
 //--- Recorder ---
@@ -120,16 +124,31 @@ export class Recorder {
       SepiaVoiceRecorder.onSpeechRecognitionEvent = function(data) {
         if (data.type == "result") {
           if (!self.isRecording && !self.isWaitingForFinalResult) return;	//TODO: ignore unplanned results - use?
+          // Prepare SpeechRecognitionEvent
+          const alternative = new SpeechRecognitionAlternative();
+          alternative.transcript = data.transcript;
+          alternative.confidence = data.confidence;
+          const result = new SpeechRecognitionResult([alternative]);
           if (data.isFinal) {
             // Final transcript
             if (self.isWaitingForFinalResult && !self.isRecording) {
               clearTimeout(self.waitingForFinalResultTimer);
             }
-            if (data.transcript) asrResultOutput.textContent = data.transcript;
+            result.isFinal = true;
+            const list = new SpeechRecognitionResultList([result]);
+            const event = new SpeechRecognitionEvent(list);
+            if (data.transcript) {
+              event._dispatch(sepiaSpeechRecognition, 'result');
+            } else {
+              event._dispatch(sepiaSpeechRecognition, 'nomatch');
+            }
             self.isWaitingForFinalResult = false;
           } else {
             // Partial transcript
-            if (data.transcript) asrResultOutput.textContent = data.transcript;
+            result.isFinal = false;
+            const list = new SpeechRecognitionResultList([result]);
+            const event = new SpeechRecognitionEvent(list);
+            event._dispatch(sepiaSpeechRecognition, 'result');
             self.isWaitingForFinalResult = true;
           }
         } else if (data.type == "error") {
