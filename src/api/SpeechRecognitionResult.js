@@ -24,11 +24,13 @@ export class SpeechRecognitionResult {
     // Use a Proxy to more closely match the interface of SpeechRecognitionResult.
     return new Proxy(this, {
       get: (_, prop) => {
-        if (typeof +prop === 'number') {
-          return this.#alternatives[prop];
+        if (prop === 'isFinal') {
+          return this.isFinal;
         } else if (prop === 'length') {
           return this.#alternatives.length;
-        }
+        } else if (typeof +prop === 'number') {
+          return this.#alternatives[prop];
+        } 
       }
     });
   }

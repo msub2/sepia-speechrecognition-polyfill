@@ -17,10 +17,10 @@
     // Use a Proxy to more closely match the interface of SpeechRecognitionResultList.
     return new Proxy(this, {
       get: (_, prop) => {
-        if (typeof +prop === 'number') {
-          return this.#results[prop];
-        } else if (prop === 'length') {
+        if (prop === 'length') {
           return this.#results.length;
+        } else if (typeof +prop === 'number') {
+          return this.#results[prop];
         }
       }
     });
