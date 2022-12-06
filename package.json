@@ -4,7 +4,7 @@
   "description": "A polyfill for SpeechRecognition utilizing a Sepia STT server.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/msub2/sepia-speechrecognition-polyfill/issues"
   },
-  "homepage": "https://github.com/msub2/sepia-speechrecognition-polyfill#readme"
+  "homepage": "https://github.com/msub2/sepia-speechrecognition-polyfill#readme",
+  "type": "module",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.2.0",
+    "rollup": "^2.79.1",
+    "rollup-plugin-web-worker-loader": "^1.6.1"
+  }
 }
