@@ -69,7 +69,6 @@ export function handleServerSettings(settings) {
     if (foundI != undefined) {
       asrOptions.language = settings.languages[foundI];
       asrOptions.model = settings.models[foundI];
-      // updatePhrasesAndHotWordsVisibility(asrOptions.model);
     }
     console.log("INFO - Default language/model: " + asrOptions.language + "/" + asrOptions.model 
       + " - NOTE: If you set 'language' via settings make sure to remove 'model'!");
