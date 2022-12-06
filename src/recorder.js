@@ -219,7 +219,8 @@ export class Recorder {
   }
   
   toggleMic() {
-    if (asrOptions.language != this.sepiaSpeechRecognition.lang) {
+    const shortenedLang = this.sepiaSpeechRecognition.lang.split('-')[0];
+    if (asrOptions.language != this.sepiaSpeechRecognition.lang && asrOptions.language != shortenedLang) {
       const event = new SpeechRecognitionErrorEvent();
       event.error = SpeechRecognitionErrorCode.LANGUAGENOTSUPPORTED;
       event.message = 'The specified SEPIA STT server does not support the language specified by the user agent.';
