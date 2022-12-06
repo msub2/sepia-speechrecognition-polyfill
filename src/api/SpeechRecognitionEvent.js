@@ -28,9 +28,10 @@ import { SpeechRecognitionResultList } from './SpeechRecognitionResultList.js';
   _dispatch(el, type) {
     // This is probably a bit of a no-no (assigning custom properties on Event instead of using CustomEvent)
     // but it's necessary to exactly replicate the expected SpeechRecognitionEvent object.
-    const event = new Event(type);
+    const event = Object.create(SpeechRecognitionEvent);
     event.resultIndex = this.resultIndex;
     event.results = this.results;
+    event.type = type;
     el._dispatchEvent(event);
   }
 }

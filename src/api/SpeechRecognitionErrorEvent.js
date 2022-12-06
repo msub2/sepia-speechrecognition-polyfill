@@ -64,9 +64,10 @@ export class SpeechRecognitionErrorEvent {
   _dispatch(el) {
     // This is probably a bit of a no-no (assigning custom properties on Event instead of using CustomEvent)
     // but it's necessary to exactly replicate the expected SpeechRecognitionErrorEvent object.
-    const event = new Event('error');
+    const event = Object.create(SpeechRecognitionErrorEvent);
     event.error = this.error;
     event.message = this.message;
+    event.type = 'error';
     el._dispatchEvent(event);
   }
 }
