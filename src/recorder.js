@@ -5,6 +5,8 @@ import { SpeechRecognitionResult } from "./api/SpeechRecognitionResult.js";
 import { SpeechRecognitionResultList } from "./api/SpeechRecognitionResultList.js";
 import { serverSettings, asrOptions, phrases } from "./server.js";
 import { SpeechRecognitionErrorCode, SpeechRecognitionErrorEvent } from "./api/SpeechRecognitionErrorEvent.js";
+import "../lib/sepia-web-audio.js";
+import "../lib/sepia-recorder.js";
 
 //--- Recorder ---
 export class Recorder {
@@ -25,6 +27,9 @@ export class Recorder {
   sepiaSpeechRecognition;
 
   constructor(sepiaSpeechRecognition) {
+    //set correct modules folder
+    if (window.SepiaFW) SepiaFW.webAudio.defaultProcessorOptions.moduleFolder = "lib";
+    
     if (!window.SepiaVoiceRecorder) {
       SepiaVoiceRecorder = {notSupported: true};	//Library not found or not supported (browser <= IE11)
       console.error("SEPIA Web Audio Library not found or not supported (IE11?)!");
