@@ -1,7 +1,21 @@
 import { getServerInfo } from '../server.js';
 import { Recorder } from "../recorder.js";
-import { SpeechRecognitionErrorEvent, SpeechRecognitionErrorCode } from './SpeechRecognitionErrorEvent.js';
+import { SpeechRecognitionErrorEvent } from './SpeechRecognitionErrorEvent.js';
 import { SpeechGrammarList } from './SpeechGrammarList.js';
+
+let sepiaOptions = {};
+
+/**
+ * Returns a SpeechRecognition implementation that uses a SEPIA STT server
+ * to perform ASR and generate transcriptions.
+ * 
+ * @param options A set of options for configuring the SEPIA STT socket client.
+ * @returns A class implementing the SpeechRecognition interface.
+ */
+ export const sepiaSpeechRecognitionInit = (options) => {
+  sepiaOptions = options;
+  return SepiaSpeechRecognition;
+}
 
 export class SepiaSpeechRecognition {
   #recorder = new Recorder(this);
@@ -34,6 +48,7 @@ export class SepiaSpeechRecognition {
 
   constructor() {
     getServerInfo();
+    console.log(sepiaOptions);
   }
 
   /**
