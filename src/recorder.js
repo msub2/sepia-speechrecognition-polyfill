@@ -1,4 +1,3 @@
-import { SepiaSpeechRecognition } from "./api/SpeechRecognition.js";
 import { SpeechRecognitionEvent } from "./api/SpeechRecognitionEvent.js";
 import { SpeechRecognitionAlternative } from "./api/SpeechRecognitionAlternative.js";
 import { SpeechRecognitionResult } from "./api/SpeechRecognitionResult.js";
@@ -21,11 +20,6 @@ export class Recorder {
   asrStreaming = false;
   sourceInfo = "-?-";
 
-  /**
-   * @type {SepiaSpeechRecognition}
-   */
-  sepiaSpeechRecognition;
-
   constructor(sepiaSpeechRecognition) {
     //set correct modules folder
     if (window.SepiaFW) SepiaFW.webAudio.defaultProcessorOptions.moduleFolder = "lib";
@@ -42,9 +36,9 @@ export class Recorder {
         this.sourceInfo = "Sample-rate: " + info.targetSampleRate 
           + "Hz (factor: " + (info.inputSampleRate/info.targetSampleRate) + ")\nDevice Label:\n" + (info.sourceInfo ? info.sourceInfo.label : "");
         console.log(this.sourceInfo);
-        this.isLoading = false;
-        this.isRecording = false;
-        this.isWaitingForFinalResult = false;
+        self.isLoading = false;
+        self.isRecording = false;
+        self.isWaitingForFinalResult = false;
         SepiaVoiceRecorder.start();
       }
       SepiaVoiceRecorder.onConnected = function(info) {
@@ -84,7 +78,6 @@ export class Recorder {
         self.isRecording = true;
       }
       SepiaVoiceRecorder.onAudioEnd = function(info) {
-        this;
         sepiaSpeechRecognition._dispatchEvent(new Event('audioend'));
         self.isRecording = false;
         //"loading" or "idle"? Depends if waiting for final result...
@@ -262,9 +255,9 @@ export class Recorder {
     
     } else if (this.isLoading || this.isWaitingForFinalResult) {
       SepiaVoiceRecorder.stopAndReleaseIfActive(function() {
-        this.isLoading = false;
-        this.isRecording = false;
-        this.isWaitingForFinalResult = false;
+        self.isLoading = false;
+        self.isRecording = false;
+        self.isWaitingForFinalResult = false;
       });
     }
   }
