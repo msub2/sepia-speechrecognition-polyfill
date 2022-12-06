@@ -4,6 +4,7 @@ import { SpeechRecognitionAlternative } from "./api/SpeechRecognitionAlternative
 import { SpeechRecognitionResult } from "./api/SpeechRecognitionResult.js";
 import { SpeechRecognitionResultList } from "./api/SpeechRecognitionResultList.js";
 import { serverSettings, asrOptions, phrases } from "./server.js";
+import { SpeechRecognitionErrorCode, SpeechRecognitionErrorEvent } from "./api/SpeechRecognitionErrorEvent.js";
 
 //--- Recorder ---
 export class Recorder {
@@ -51,13 +52,20 @@ export class Recorder {
         sepiaSpeechRecognition._dispatchEvent(new Event('end'));
       }
       SepiaVoiceRecorder.onProcessorInitError = function(err) {
-        console.error("SepiaVoiceRecorder -  onProcessorInitError", err);
         self.onMicError();
-        console.log("ERROR - onProcessorInitError: " + err.message);
+        const error = new SpeechRecognitionErrorEvent();
+        error.message = err.message;
+        switch (err.name) {
+          case 'NotAllowedError':
+            error.error = SpeechRecognitionErrorCode.NOTALLOWED;
+            error._dispatch(sepiaSpeechRecognition);
+            break;
+          default:
+            console.log(err);
+            break;
+        }
         if (location.protocol == "http:" && !location.origin.indexOf("http://localhost") == 0) {
           console.error("Init. ERROR - Likely because of insecure origin (no HTTPS or localhost)");
-        } else {
-          console.error("Init. ERROR - " + err.message);
         }
       }
       SepiaVoiceRecorder.onProcessorError = function(err) {
@@ -140,7 +148,10 @@ export class Recorder {
             if (data.transcript) {
               event._dispatch(sepiaSpeechRecognition, 'result');
             } else {
-              event._dispatch(sepiaSpeechRecognition, 'nomatch');
+              const event = new SpeechRecognitionErrorEvent();
+              event.error = SpeechRecognitionErrorCode.NOSPEECH;
+              event.message = 'No speech was detected.';
+              event._dispatch(sepiaSpeechRecognition)
             }
             self.isWaitingForFinalResult = false;
           } else {
@@ -148,12 +159,35 @@ export class Recorder {
             result.isFinal = false;
             const list = new SpeechRecognitionResultList([result]);
             const event = new SpeechRecognitionEvent(list);
-            event._dispatch(sepiaSpeechRecognition, 'result');
+            if (data.transcript) {
+              event._dispatch(sepiaSpeechRecognition, 'result');
+            } else {
+              event._dispatch(sepiaSpeechRecognition, 'nomatch');
+            }
             self.isWaitingForFinalResult = true;
           }
         } else if (data.type == "error") {
+          const error = new SpeechRecognitionErrorEvent();
+          error.message = data.message;
           if (data.name && data.message) {
-            console.log("Speech Recognition - " + data.name + ": " + data.message);
+            switch (data.name) {
+              case 'SocketConnectionError':
+                error.error = SpeechRecognitionErrorCode.NETWORK;
+                error._dispatch(sepiaSpeechRecognition);
+                break;
+              case 'Error':
+                if (data.message === 'ChunkProcessorError failed to load.') {
+                  // This only seems to happen when the access token is incorrect,
+                  // so will use this for service not allowed.
+                  error.error = SpeechRecognitionErrorCode.SERVICENOTALLOWED;
+                  error.message = 'You are likely unauthorized to access this SEPIA STT server.';
+                  error._dispatch(sepiaSpeechRecognition);
+                }
+                break;
+              default:
+                console.log(data);
+                break;
+            }
           } else {
             console.error("Speech Recognition Error:", data);
           }
@@ -185,6 +219,14 @@ export class Recorder {
   }
   
   toggleMic() {
+    if (asrOptions.language != this.sepiaSpeechRecognition.lang) {
+      const event = new SpeechRecognitionErrorEvent();
+      event.error = SpeechRecognitionErrorCode.LANGUAGENOTSUPPORTED;
+      event.message = 'The specified SEPIA STT server does not support the language specified by the user agent.';
+      event._dispatch(this.sepiaSpeechRecognition);
+      return;
+    }
+    
     const self = this;
     if (!this.isLoading && !this.isRecording && !this.isWaitingForFinalResult) {
       this.isLoading = true;
