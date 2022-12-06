@@ -39,9 +39,10 @@ export const SpeechRecognitionErrorCode = Object.freeze({
    */
   BADGRAMMAR: 'bad-grammar',
   /** 
-   * The language was not supported. 
+   * The language was not supported.
    * 
-   * **This is not yet implemented.**
+   * In the context of this polyfill, this means the SEPIA STT server does not have a corresponding
+   * model to the user's specified language.
    */
   LANGUAGENOTSUPPORTED: 'language-not-supported',
 });
