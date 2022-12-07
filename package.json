@@ -21,6 +21,7 @@
   "devDependencies": {
     "@rollup/plugin-terser": "^0.2.0",
     "rollup": "^2.79.1",
+    "rollup-plugin-inline-code": "^1.2.7",
     "rollup-plugin-web-worker-loader": "^1.6.1"
   }
 }

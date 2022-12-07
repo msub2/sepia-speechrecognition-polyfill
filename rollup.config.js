@@ -1,4 +1,5 @@
 import webWorkerLoader from 'rollup-plugin-web-worker-loader';
+import inlineCode from 'rollup-plugin-inline-code';
 import terser from '@rollup/plugin-terser';
 
 const formats = ['esm', 'esm-min']
@@ -14,7 +15,8 @@ export default formats.map(format => {
     },
     plugins: [
       terserPlugin(),
-      webWorkerLoader({ targetPlatform: 'browser' })
+      webWorkerLoader({ targetPlatform: 'browser' }),
+      inlineCode()
     ]
   }
 });
