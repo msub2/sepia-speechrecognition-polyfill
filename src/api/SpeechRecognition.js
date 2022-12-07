@@ -3,22 +3,22 @@ import { Recorder } from "../recorder.js";
 import { SpeechRecognitionErrorEvent } from './SpeechRecognitionErrorEvent.js';
 import { SpeechGrammarList } from './SpeechGrammarList.js';
 
-let sepiaOptions = {};
+let sepiaConfig = {};
 
 /**
  * Returns a SpeechRecognition implementation that uses a SEPIA STT server
  * to perform ASR and generate transcriptions.
  * 
- * @param options A set of options for configuring the SEPIA STT socket client.
+ * @param config The configuration that is ultimately passed to the SEPIA STT socket client.
  * @returns A class implementing the SpeechRecognition interface.
  */
- export const sepiaSpeechRecognitionInit = (options) => {
-  sepiaOptions = options;
+ export const sepiaSpeechRecognitionInit = (config) => {
+  sepiaConfig = config;
   return SepiaSpeechRecognition;
 }
 
 export class SepiaSpeechRecognition {
-  #recorder = new Recorder(this);
+  #recorder = new Recorder(this, sepiaConfig);
   
   /**
    * Returns and sets a collection of SpeechGrammar objects that represent the grammars 
@@ -48,7 +48,6 @@ export class SepiaSpeechRecognition {
 
   constructor() {
     getServerInfo();
-    console.log(sepiaOptions);
   }
 
   /**

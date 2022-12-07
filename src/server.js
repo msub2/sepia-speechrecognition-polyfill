@@ -1,7 +1,7 @@
 //--- Server ---
 
 export var serverSettings = {
-  serverUrl: "http://localhost:20741",//location.href.replace(/(.*)\/www\/(.*?.html|)$/, "$1"),
+  serverUrl: "http://localhost:20741",
   clientId: "any",
   accessToken: "test1234"
 }
@@ -12,12 +12,12 @@ export var asrOptions = {
   model: "",
   continuous: true,
   optimizeFinalResult: true,
-  messageFormat: "default", 	// "webSpeechApi" seems to mess with results, keep on default
+  messageFormat: "default", 	// Current API is built around "default", "webSpeechApi" not needed for now
   //engine specific options:
   engineOptions: {}
 };
-export var phrases = [];
-export var hotWords = [];
+var phrases = [];
+var hotWords = [];
 
 var asrEngine = "";
 var availableFeatures = {};

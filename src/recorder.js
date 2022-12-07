@@ -2,7 +2,7 @@ import { SpeechRecognitionEvent } from "./api/SpeechRecognitionEvent.js";
 import { SpeechRecognitionAlternative } from "./api/SpeechRecognitionAlternative.js";
 import { SpeechRecognitionResult } from "./api/SpeechRecognitionResult.js";
 import { SpeechRecognitionResultList } from "./api/SpeechRecognitionResultList.js";
-import { serverSettings, asrOptions, phrases } from "./server.js";
+import { asrOptions } from "./server.js";
 import { SpeechRecognitionErrorCode, SpeechRecognitionErrorEvent } from "./api/SpeechRecognitionErrorEvent.js";
 import "../lib/sepia-web-audio.js";
 import "../lib/sepia-recorder.js";
@@ -20,7 +20,7 @@ export class Recorder {
   asrStreaming = false;
   sourceInfo = "-?-";
 
-  constructor(sepiaSpeechRecognition) {
+  constructor(sepiaSpeechRecognition, sepiaSpeechRecognitionConfig) {
     //set correct modules folder
     if (window.SepiaFW) SepiaFW.webAudio.defaultProcessorOptions.moduleFolder = "lib";
     
@@ -29,6 +29,7 @@ export class Recorder {
       console.error("SEPIA Web Audio Library not found or not supported (IE11?)!");
     } else {
       this.sepiaSpeechRecognition = sepiaSpeechRecognition;
+      this.sepiaSpeechRecognitionConfig = sepiaSpeechRecognitionConfig;
       const self = this;
       
       SepiaVoiceRecorder.onProcessorReady = function(info) {
@@ -233,15 +234,22 @@ export class Recorder {
       SepiaVoiceRecorder.stopAndReleaseIfActive(function() {
         SepiaFW.webAudio.tryNativeStreamResampling = false;		//try native resampling?
         //build options
-        var opt = Object.assign({}, serverSettings, asrOptions);
-        if (phrases.length) {
-          if (!opt.engineOptions) opt.engineOptions = {};
-          opt.engineOptions.phrases = phrases;
+        const speechRecOptions = {
+          language: self.sepiaSpeechRecognition.lang,
+          continuous: self.sepiaSpeechRecognition.continuous,
+          messageFormat: 'default'
         }
-        if (hotWords.length) {
-          if (!opt.engineOptions) opt.engineOptions = {};
-          opt.engineOptions.hotWords = hotWords;
-        }
+        var opt = Object.assign(self.sepiaSpeechRecognitionConfig, speechRecOptions);
+        console.log(opt);
+        // Commenting out for now, will likely try to utilize these for grammars in the future
+        // if (phrases.length) {
+        //   if (!opt.engineOptions) opt.engineOptions = {};
+        //   opt.engineOptions.phrases = phrases;
+        // }
+        // if (hotWords.length) {
+        //   if (!opt.engineOptions) opt.engineOptions = {};
+        //   opt.engineOptions.hotWords = hotWords;
+        // }
         SepiaVoiceRecorder.create({
           gain: self.gain,
           //recordingLimitMs: 10000,	//NOTE: will not apply in continous mode
