@@ -89,6 +89,7 @@ micButton.addEventListener('pointerup', () => {
 - From my testing, this polyfill actually behaves closer to spec than Chromium's implementation in regards to how `continuous` works.
   - On Chrome, once the first final transcript is received, recognition seems to stop, and it only returns that last transcript no matter how much you say after that. The polyfill continuously returns finalized transcripts after a set period of no speech from the user.
 - The polyfill will attempt to infer the `lang` property based on the document language or `navigator.language`. Chromium does not.
+- Chromium censors curse words/swears. The polyfill does not :)
 
 ## Acknowledgements
 
