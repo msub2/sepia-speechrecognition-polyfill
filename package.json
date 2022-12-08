@@ -2,7 +2,7 @@
   "name": "sepia-speechrecognition-polyfill",
   "version": "1.0.0",
   "description": "A polyfill for SpeechRecognition utilizing a Sepia STT server.",
-  "main": "index.js",
+  "main": "dist/sepia-speechrecognition-polyfill.js",
   "scripts": {
     "build": "rollup -c"
   },
@@ -10,9 +10,12 @@
     "type": "git",
     "url": "git+https://github.com/msub2/sepia-speechrecognition-polyfill.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "speech recognition",
+    "polyfill"
+  ],
+  "author": "Daniel Adams <msub2official@gmail.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/msub2/sepia-speechrecognition-polyfill/issues"
   },
