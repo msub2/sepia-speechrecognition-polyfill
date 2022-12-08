@@ -1,7 +1,7 @@
 {
   "name": "sepia-speechrecognition-polyfill",
   "version": "1.0.0",
-  "description": "A polyfill for SpeechRecognition utilizing a Sepia STT server.",
+  "description": "A polyfill for SpeechRecognition utilizing a SEPIA STT server.",
   "main": "dist/sepia-speechrecognition-polyfill.js",
   "scripts": {
     "build": "rollup -c"
