@@ -41,7 +41,7 @@ export class SepiaSpeechRecognitionConfig {
   /// Engine specific options:
 
   /**
-   * Allows you to set options for features that may only be available in certain engines.
+   * Allows you to set options for features that may only be available in certain engines used by the server.
    * An example would be Vosk's speaker detection, which is not available in Coqui.
    */
   engineOptions = {};
