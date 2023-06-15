@@ -47,7 +47,7 @@ export class SepiaSpeechRecognition {
   maxAlternatives = 1;
 
   constructor() {
-    getServerInfo();
+    getServerInfo(sepiaConfig);
   }
 
   /**

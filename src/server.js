@@ -75,8 +75,13 @@ export function handleServerSettings(settings) {
   }
 }
 
-export function getServerInfo() {
+export function getServerInfo(config) {
   console.log("INFO - Loading server settings...");
+
+  serverSettings.serverUrl = config.serverUrl;
+  serverSettings.clientId = config.clientId;
+  serverSettings.accessToken = config.accessToken;
+
   var controller = new AbortController();
   setTimeout(function() {controller.abort();}, 8000);
   fetch(serverSettings.serverUrl + "/settings", {
